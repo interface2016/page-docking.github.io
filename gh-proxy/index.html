@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub 文件加速</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Noto Sans SC', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .transition-colors {
+                transition-property: background-color, border-color, color, fill, stroke;
+                transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+                transition-duration: 150ms;
+            }
+        }
+    </style>
+    <style>
+        [v-cloak] { display: none; }
+    </style>
+</head>
+<body>
+    <div id="app" v-cloak>
+        <div :class="{ 'dark': isDark }" class="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors">
+            <header class="bg-white dark:bg-gray-800 shadow transition-colors">
+                <nav class="container mx-auto px-4 py-3">
+                    <div class="flex justify-between items-center">
+                        <a :href="currentHost" class="text-xl font-bold text-gray-800 dark:text-white transition-colors">GitHub Proxy Server</a>
+                        <button @click="toggleDarkMode" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-white transition-colors" aria-label="切换主题">
+                            <svg v-if="isDark" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                            </svg>
+                        </button>
+                    </div>
+                </nav>
+            </header>
+            <main class="container mx-auto px-4 py-8">
+                <section class="text-center mb-12">
+                    <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Logo" class="w-24 h-24 mx-auto mb-4">
+                    <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-4 transition-colors">GitHub Proxy Server</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6 transition-colors">GitHub 文件, Releases, archive, gist, raw.githubusercontent.com 文件代理加速下载服务。</p>
+                    <form @submit.prevent="submitForm" class="max-w-2xl mx-auto">
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <input v-model="url" type="text" placeholder="输入 GitHub 文件链接" required
+                                class="flex-grow px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                            <button type="submit" class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:ring-offset-gray-900 transition-colors">
+                                下载
+                            </button>
+                        </div>
+                    </form>
+                </section>
+                <section class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8 transition-colors">
+                    <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-4 transition-colors">终端命令行</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4 transition-colors">
+                        支持终端命令行 git clone, wget, curl 等工具下载。<br>
+                        支持 <span class="text-red-500 dark:text-red-400">raw.githubusercontent.com</span>,
+                        <span class="text-red-500 dark:text-red-400">gist.github.com</span>,
+                        <span class="text-red-500 dark:text-red-400">gist.githubusercontent.com</span> 文件下载。<br>
+                        <b>注意：</b>不支持 SSH Key 方式 git clone 下载。
+                    </p>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-bold text-gray-700 dark:text-gray-200 mb-2 transition-colors">git clone</h4>
+                            <pre class="bg-gray-100 dark:bg-gray-700 p-3 rounded-md overflow-x-auto transition-colors"><code class="text-gray-800 dark:text-gray-200">git clone {{ currentHost }}https://github.com/stilleshan/ServerStatus</code></pre>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 dark:text-gray-200 mb-2 transition-colors">git clone 私有仓库</h4>
+                            <p class="text-gray-600 dark:text-gray-300 mb-2 transition-colors">
+                                Clone 私有仓库需要用户在 <a href="https://github.com/settings/tokens" target="_blank" class="text-blue-500 hover:underline">Personal access tokens</a> 申请 Token 配合使用。
+                            </p>
+                            <pre class="bg-gray-100 dark:bg-gray-700 p-3 rounded-md overflow-x-auto transition-colors"><code class="text-gray-800 dark:text-gray-200">git clone https://user:your_token@{{ currentHost.replace('https://', '') }}https://github.com/your_name/your_private_repo</code></pre>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 dark:text-gray-200 mb-2 transition-colors">wget & curl</h4>
+                            <pre class="bg-gray-100 dark:bg-gray-700 p-3 rounded-md overflow-x-auto transition-colors">
+                                <code class="text-gray-800 dark:text-gray-200">
+wget {{ currentHost }}https://github.com/stilleshan/ServerStatus/archive/master.zip
+wget {{ currentHost }}https://raw.githubusercontent.com/stilleshan/ServerStatus/master/Dockerfile
+curl -O {{ currentHost }}https://github.com/stilleshan/ServerStatus/archive/master.zip
+curl -O {{ currentHost }}https://raw.githubusercontent.com/stilleshan/ServerStatus/master/Dockerfile
+                                </code></pre>
+                        </div>
+                    </div>
+                </section>
+                <section class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors">
+                    <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-4 transition-colors">首页下载</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4 transition-colors">
+                        在本页地址栏输入合规链接（参考以下链接）点击下载按钮<br>
+                        支持 <span class="text-red-500 dark:text-red-400">raw.githubusercontent.com</span>,
+                        <span class="text-red-500 dark:text-red-400">gist.github.com</span>,
+                        <span class="text-red-500 dark:text-red-400">gist.githubusercontent.com</span> 文件下载。
+                    </p>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-bold text-gray-700 dark:text-gray-200 mb-2 transition-colors">Raw 文件</h4>
+                            <pre class="bg-gray-100 dark:bg-gray-700 p-3 rounded-md overflow-x-auto transition-colors"><code class="text-gray-800 dark:text-gray-200">https://raw.githubusercontent.com/stilleshan/ServerStatus/master/Dockerfile</code></pre>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 dark:text-gray-200 mb-2 transition-colors">分支源码</h4>
+                            <pre class="bg-gray-100 dark:bg-gray-700 p-3 rounded-md overflow-x-auto transition-colors"><code class="text-gray-800 dark:text-gray-200">https://github.com/stilleshan/ServerStatus/archive/master.zip</code></pre>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 dark:text-gray-200 mb-2 transition-colors">Releases 源码</h4>
+                            <pre class="bg-gray-100 dark:bg-gray-700 p-3 rounded-md overflow-x-auto transition-colors"><code class="text-gray-800 dark:text-gray-200">https://github.com/stilleshan/ServerStatus/archive/v1.0.tar.gz</code></pre>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 dark:text-gray-200 mb-2 transition-colors">Releases 文件</h4>
+                            <pre class="bg-gray-100 dark:bg-gray-700 p-3 rounded-md overflow-x-auto transition-colors"><code class="text-gray-800 dark:text-gray-200">https://github.com/fatedier/frp/releases/download/v0.33.0/frp_0.33.0_linux_amd64.tar.gz</code></pre>
+                        </div>
+                    </div>
+                </section>
+                <section class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mt-8 transition-colors">
+                    <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-4 transition-colors">相关链接</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4 transition-colors">
+                        与 GitHub 代理和镜像相关的有用链接：
+                    </p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-300">
+                        <li>
+                            <a href="https://github.com/xiaoxuan6/github-mirror" target="_blank" class="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300">
+                                xiaoxuan6/github-mirror
+                            </a>
+                            - 
+                            <a href="https://github-mirror.us.kg/" target="_blank" class="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300">
+                                https://github-mirror.us.kg/
+                            </a>
+                            -  GitHub 镜像聚合
+                        </li>
+                    </ul>
+                </section>
+            </main>
+            <footer class="bg-primary dark:bg-gray-800 shadow mt-12 transition-colors">
+                <div class="container mx-auto px-4 py-4">
+                    <div class="flex justify-center items-center text-gray-600 dark:text-gray-300 text-sm">
+                        <span>网页样式 : </span>
+                        <a href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer"
+                           class="inline-flex items-center ml-2 text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300">
+                            <svg class="h-6 w-6 mr-1" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 C13.666,10.618,15.027,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 c1.177,1.194,2.538,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C10.337,13.382,8.976,12,6.001,12z" />
+                            </svg>
+                            Tailwind CSS
+                        </a>
+                        <span class="mx-2">|</span>
+                        <span>代理项目 : <a href="https://github.com/hunshcn/gh-proxy/" target="_blank" class="hover:text-blue-500">hunshcn/gh-proxy</a></span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script>
+        const { createApp, ref, computed, onMounted, watch } = Vue
+        createApp({
+            setup() {
+                const isDark = ref(false)
+                const url = ref('')
+                const currentHost = computed(() => `${window.location.protocol}//${window.location.host}/`)
+                const toggleDarkMode = () => {
+                    isDark.value = !isDark.value
+                    localStorage.setItem('darkMode', isDark.value)
+                }
+                const submitForm = () => {
+                    if (url.value) {
+                        window.open(currentHost.value + '' + encodeURIComponent(url.value), '_blank')
+                    }
+                }
+                onMounted(() => {
+                    const savedDarkMode = localStorage.getItem('darkMode')
+                    if (savedDarkMode !== null) {
+                        isDark.value = savedDarkMode === 'true'
+                    } else {
+                        isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches
+                    }
+                })
+                watch(isDark, (newValue) => {
+                    if (newValue) {
+                        document.documentElement.classList.add('dark')
+                    } else {
+                        document.documentElement.classList.remove('dark')
+                    }
+                }, { immediate: true })
+                return {
+                    isDark,
+                    url,
+                    currentHost,
+                    toggleDarkMode,
+                    submitForm
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+</html>
