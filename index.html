@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.47/vue.global.prod.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+        .dark {
+            color-scheme: dark;
+        }
+        .bg-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body>
+    <div id="app" v-cloak>
+        <div :class="['min-h-screen flex flex-col justify-center items-center p-4 bg-pattern', isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900']">
+            <div class="max-w-3xl w-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl rounded-lg overflow-hidden backdrop-blur-sm bg-opacity-90 dark:bg-opacity-90 transition-shadow duration-300">
+                <div class="p-8">
+                    <h1 class="text-4xl font-bold mb-4 text-center">
+                        Welcome 👋 ようこそ
+                    </h1>
+                    <p class="text-xl mb-6 text-center">
+                        🌟 This is a static site 🌟<br>
+                        静的サイトです
+                    </p>
+                    <p class="mb-4 text-center">
+                        Designed to host a large number of static resources and single-page applications.<br>
+                        多数の静的リソースとシングルページアプリケーションをホストするために設計されています。
+                    </p>
+                    <div class="flex justify-center">
+                        <button @click="toggleDarkMode" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+                            {{ isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const { createApp, ref, onMounted, watch } = Vue
+        createApp({
+            setup() {
+                const isDarkMode = ref(false)
+                const toggleDarkMode = () => {
+                    isDarkMode.value = !isDarkMode.value
+                    localStorage.setItem('darkMode', isDarkMode.value)
+                    updateTheme()
+                }
+                const updateTheme = () => {
+                    if (isDarkMode.value) {
+                        document.documentElement.classList.add('dark')
+                    } else {
+                        document.documentElement.classList.remove('dark')
+                    }
+                }
+                onMounted(() => {
+                    const savedMode = localStorage.getItem('darkMode')
+                    if (savedMode !== null) {
+                        isDarkMode.value = savedMode === 'true'
+                    } else {
+                        isDarkMode.value = window.matchMedia('(prefers-color-scheme: dark)').matches
+                    }
+                    updateTheme()
+                })
+                watch(isDarkMode, updateTheme)
+                return {
+                    isDarkMode,
+                    toggleDarkMode
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+</html>
