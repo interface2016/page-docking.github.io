@@ -60,7 +60,7 @@
                        gist, raw.githubusercontent.com 文件代理加速下载服务。</p>
                    <form @submit.prevent="submitForm" class="max-w-2xl mx-auto">
                        <div class="flex flex-col sm:flex-row gap-4">
-                           <div class="relative flex-grow">
+                           <div class="relative w-full sm:w-auto sm:flex-grow">
                                <input v-model="url" type="text" placeholder="输入 GitHub 文件链接" required
                                    class="w-full px-4 py-2 pr-10 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
                                <button v-if="url" @click="clearUrl" type="button"
@@ -73,7 +73,7 @@
                                    </svg>
                                </button>
                            </div>
-                           <div class="flex gap-2">
+                           <div class="flex justify-center sm:justify-start gap-2">
                                <button type="submit"
                                    class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:ring-offset-gray-900 transition-colors">
                                    下载
@@ -167,20 +167,25 @@ curl -O {{ currentHost }}https://raw.githubusercontent.com/stilleshan/ServerStat
                     </ul>
                 </section>
             </main>
-            <footer class="bg-primary dark:bg-gray-800 shadow mt-12 transition-colors">
-                <div class="container mx-auto px-4 py-4">
-                    <div class="flex justify-center items-center text-gray-600 dark:text-gray-300 text-sm">
-                        <span>网页样式 : </span>
-                        <a href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer"
-                           class="inline-flex items-center ml-2 text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300">
-                            <svg class="h-6 w-6 mr-1" viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 C13.666,10.618,15.027,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 c1.177,1.194,2.538,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C10.337,13.382,8.976,12,6.001,12z" />
-                            </svg>
-                            Tailwind CSS
-                        </a>
-                        <span class="mx-2">|</span>
-                        <span>代理项目 : <a href="https://github.com/hunshcn/gh-proxy/" target="_blank" class="hover:text-blue-500">hunshcn/gh-proxy</a></span>
+            <footer class="bg-gray-200 dark:bg-gray-800 shadow mt-12 transition-colors py-4">
+                <div class="container mx-auto px-4">
+                    <div class="flex flex-wrap justify-center items-stretch gap-4 text-sm">
+                        <div class="bg-gray-100 dark:bg-gray-700 px-4 py-2 rounded-md transition-colors flex flex-wrap justify-center items-center w-64 min-h-[60px]">
+                            <span class="text-gray-600 dark:text-gray-300 mr-2">网页样式 :</span>
+                            <a href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer"
+                                class="inline-flex items-center text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300">
+                                <svg class="h-6 w-6 mr-1" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 C13.666,10.618,15.027,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 c1.177,1.194,2.538,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C10.337,13.382,8.976,12,6.001,12z" />
+                                </svg>
+                                Tailwind CSS
+                            </a>
+                        </div>
+                        <div class="bg-gray-100 dark:bg-gray-700 px-4 py-2 rounded-md transition-colors flex flex-wrap justify-center items-center w-64 min-h-[60px]">
+                            <span class="text-gray-600 dark:text-gray-300 mr-2">代理项目 :</span>
+                            <a href="https://github.com/hunshcn/gh-proxy/" target="_blank" class="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300">
+                                hunshcn/gh-proxy
+                            </a>
+                        </div>
                     </div>
                 </div>
             </footer>
