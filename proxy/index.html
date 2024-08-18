@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloudflare Reverse Acceleration 🚀</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+        [v-cloak] { display: none; }
+        .custom-width { width: clamp(300px, 80%, 800px); }
+        body {
+            font-family: 'Noto Sans JP','Noto Sans', sans-serif;
+        }
+        *:not([class*="icon"]):not(i) {
+            font-family: 'Noto Sans JP','Noto Sans', sans-serif;
+        }
+        @media (max-width: 800px){
+          #title {
+            width: 60%;
+          }
+          #panel {
+            width: 100%;
+          }
+        }
+        .bg-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.05'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+</head>
+<body>
+    <div id="app" v-cloak>
+    <div :class="{'dark': isDarkMode}" class="min-h-screen flex flex-col items-center justify-center px-4 pt-10 pb-4 bg-gray-100 dark:bg-gray-900 transition-colors duration-300 bg-pattern dark:bg-none">
+        <div id="panel" class="custom-width bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 transition-colors duration-300">
+            <header class="flex justify-between items-center mb-8">
+                <h1 id="title" class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">Cloudflare Reverse Acceleration 🚀</h1>
+                <button @click="toggleDarkMode" class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300">
+                    <i :class="['fas', isDarkMode ? 'fa-sun text-yellow-400' : 'fa-moon text-indigo-600']"></i>
+                </button>
+            </header>
+            <p class="text-gray-600 dark:text-gray-300 mb-6">Mirror acceleration station. Enter a URL to generate a proxied version. 🌐✨</p>
+            <div class="mb-6">
+                <input
+                    id="url"
+                    v-model="url"
+                    type="text"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white transition-colors duration-300"
+                    placeholder="www.example.com"
+                    @keyup.enter="generateUrl"
+                >
+            </div>
+            <button @click="generateUrl" class="w-full bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300 mb-6">
+                <i class="fas fa-magic mr-2"></i> Generate Proxied URL
+            </button>
+            <div class="mb-6 bg-gray-100 dark:bg-gray-700 rounded-lg p-4 transition-colors duration-300">
+                <div class="flex items-center mb-2">
+                    <input
+                        :value="generatedUrl"
+                        readonly
+                        class="flex-grow px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white transition-colors duration-300"
+                    >
+                </div>
+                <div class="flex space-x-2">
+                    <button @click="copyToClipboard" class="flex-1 bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-300">
+                        <i class="fas fa-copy mr-2"></i> Copy
+                    </button>
+                    <a :href="generatedUrl" target="_blank" rel="noopener noreferrer" class="flex-1 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300 text-center">
+                        <i class="fas fa-external-link-alt mr-2"></i> Visit
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Quick Access 🚀</h2>
+                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
+                    <button
+                        v-for="site in quickAccessSites"
+                        :key="site.id"
+                        @click="setQuickAccessUrl(site.url)"
+                        class="flex flex-col items-center justify-center p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                        <i :class="['fab', site.icon, 'text-2xl mb-2', site.color]"></i>
+                        <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ site.name }}</span>
+                    </button>
+                </div>
+            </div>
+            <div class="mt-8 text-center text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">
+                <p class="mb-2">This tool is for educational purposes only. Use responsibly.</p>
+                <p class="mb-2">
+                    <a href="https://proxy.kunzite.club/https://duckduckgo.com/?t=h_&amp;q=hi&amp;ia=chat" class="text-indigo-600 dark:text-indigo-400 hover:underline">Duckduckgo AI</a> |
+                    <a href="https://proxy.kunzite.club/https://www.google.com/maps" class="text-indigo-600 dark:text-indigo-400 hover:underline">Google Maps</a> |
+                     <a href="https://proxy.kunzite.club/https://earth.google.com/" class="text-indigo-600 dark:text-indigo-400 hover:underline">Earth</a>
+                </p>
+                <p>&copy; Cloudflare Reverse <a href="https://github.com/1234567Yang/cf-proxy-ex">Acceleration</a>. </p>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script>
+        const { createApp, ref, watch } = Vue;
+        const app = createApp({
+            setup() {
+                const isDarkMode = ref(localStorage.getItem('darkMode') === 'true');
+                const url = ref('');
+                const generatedUrl = ref('https://proxy.kunzite.club/');
+                const quickAccessSites = [
+                    { id: 'github', name: 'GitHub', url: 'https://github.com', icon: 'fa-github', color: 'text-blue-600' },
+                    { id: 'reddit', name: 'Reddit', url: 'https://www.reddit.com', icon: 'fa-reddit', color: 'text-orange-500' },
+                    { id: 'wikipedia', name: 'Wikipedia', url: 'https://www.wikipedia.org', icon: 'fa-wikipedia-w', color: 'text-gray-600' },
+                    { id: 'facebook', name: 'Jsdelivr', url: 'https://www.jsdelivr.com/', icon: 'fa-js', color: 'text-blue-600' },
+                    { id: 'instagram', name: 'Instagram', url: 'https://www.instagram.com', icon: 'fa-instagram', color: 'text-pink-500' },
+                    { id: 'linkedin', name: 'LinkedIn', url: 'https://www.linkedin.com', icon: 'fa-linkedin-in', color: 'text-blue-700' },
+                    { id: 'netflix', name: 'DockerHub', url: 'https://hub.docker.com/', icon: 'fa-brands fa-docker', color: 'text-red-600' },
+                    { id: 'amazon', name: 'Amazon', url: 'https://www.amazon.com', icon: 'fa-amazon', color: 'text-yellow-500' },
+                    { id: 'spotify', name: 'Spotify', url: 'https://www.spotify.com', icon: 'fa-spotify', color: 'text-green-500' },
+                ];
+                function toggleDarkMode() {
+                    isDarkMode.value = !isDarkMode.value;
+                    localStorage.setItem('darkMode', isDarkMode.value);
+                }
+                function generateUrl() {
+                    if (url.value) {
+                        generatedUrl.value = 'https://proxy.kunzite.club/' + url.value;
+                    }
+                }
+                function copyToClipboard() {
+                    navigator.clipboard.writeText(generatedUrl.value)
+                        .then(() => alert('URL copied to clipboard! 📋✅'))
+                        .catch(err => console.error('Failed to copy: ', err));
+                }
+                function setQuickAccessUrl(siteUrl) {
+                    url.value = siteUrl;
+                    generateUrl();
+                }
+                watch(isDarkMode, (newValue) => {
+                    if (newValue) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                }, { immediate: true });
+                return {
+                    isDarkMode,
+                    url,
+                    generatedUrl,
+                    quickAccessSites,
+                    toggleDarkMode,
+                    generateUrl,
+                    copyToClipboard,
+                    setQuickAccessUrl
+                };
+            }
+        });
+        app.mount('#app');
+        app.config.globalProperties.$watch('isDarkMode', (value) => {
+            document.documentElement.classList.toggle('dark', value);
+        }, { immediate: true });
+    </script>
+</body>
+</html>
