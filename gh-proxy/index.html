@@ -98,6 +98,7 @@
                         支持 <span class="text-red-500 dark:text-red-400">raw.githubusercontent.com</span>,
                         <span class="text-red-500 dark:text-red-400">gist.github.com</span>,
                         <span class="text-red-500 dark:text-red-400">gist.githubusercontent.com</span> 文件下载。<br>
+                        增加支持 <span class="text-red-500 dark:text-red-400">api.github.com</span> 和 <span class="text-red-500 dark:text-red-400">git.io</span>下载。<br>
                         <b>注意：</b>不支持 SSH Key 方式 git clone 下载。
                     </p>
                     <div class="space-y-4">
@@ -117,7 +118,20 @@
                             <pre class="bg-gray-100 dark:bg-gray-700 p-3 rounded-md overflow-x-auto transition-colors"><code class="text-gray-800 dark:text-gray-200">wget {{ currentHost }}https://github.com/stilleshan/ServerStatus/archive/master.zip
 wget {{ currentHost }}https://raw.githubusercontent.com/stilleshan/ServerStatus/master/Dockerfile
 curl -O {{ currentHost }}https://github.com/stilleshan/ServerStatus/archive/master.zip
-curl -O {{ currentHost }}https://raw.githubusercontent.com/stilleshan/ServerStatus/master/Dockerfile</code></pre>
+curl -O {{ currentHost }}https://raw.githubusercontent.com/stilleshan/ServerStatus/master/Dockerfile
+# 可处理形如下列的Github一键脚本
+bash <(curl -L {{ currentHost }}https://github.com/crazypeace/warp.sh/raw/main/warp.sh) 4
+bash <(wget -qO- -o- {{ currentHost }}https://git.io/v2ray.sh)
+wget -O tcpx.sh "{{ currentHost }}https://git.io/JYxKU" && chmod +x tcpx.sh && ./tcpx.sh
+wget -N --no-check-certificate {{ currentHost }}https://raw.githubusercontent.com/Misaka-blog/hysteria-install/main/hy2/hysteria.sh && bash hysteria.sh</code></pre>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 dark:text-gray-200 mb-2 transition-colors">脚本使用</h4>
+                            <pre class="bg-gray-100 dark:bg-gray-700 p-3 rounded-md overflow-x-auto transition-colors"><code class="text-gray-800 dark:text-gray-200">#需 Perl 执行环境
+#只处理一层脚本中GitHub资源
+bash <(curl -L {{ currentHost }}/https://github.com/crazypeace/warp.sh/raw/main/warp.sh | perl -pe "s#(http.*?git[^/]*?/)#{{ currentHost }}\1#g") 4
+#安裝執行檔和 .dat 資料檔
+bash <(curl -L {{ currentHost }}https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh | perl -pe "s#(http.*?git[^/]*?/)#{{ currentHost }}\1#g")</code></pre>
                         </div>
                     </div>
                 </section>
@@ -163,6 +177,11 @@ curl -O {{ currentHost }}https://raw.githubusercontent.com/stilleshan/ServerStat
                                 https://github-mirror.us.kg/
                             </a>
                             -  GitHub 镜像聚合
+                        </li>
+                        <li>
+                            <a href="https://github.com/crazypeace/gh-proxy/" target="_blank" class="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300">
+                            https://github.com/crazypeace/gh-proxy/
+                            </a>
                         </li>
                     </ul>
                 </section>
