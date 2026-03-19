@@ -95,9 +95,9 @@
             <div class="mt-8 text-center text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">
                 <p class="mb-2">This tool is for educational purposes only. Use responsibly.</p>
                 <p class="mb-2">
-                    <a href="https://proxy.kunzite.club/https://duckduckgo.com/?t=h_&amp;q=hi&amp;ia=chat" class="text-indigo-600 dark:text-indigo-400 hover:underline">Duckduckgo AI</a> |
-                    <a href="https://proxy.kunzite.club/https://www.google.com/maps" class="text-indigo-600 dark:text-indigo-400 hover:underline">Google Maps</a> |
-                     <a href="https://proxy.kunzite.club/https://earth.google.com/" class="text-indigo-600 dark:text-indigo-400 hover:underline">Earth</a>
+                    <a :href="baseUrl + '/https://duckduckgo.com/?t=h_&amp;q=hi&amp;ia=chat'" class="text-indigo-600 dark:text-indigo-400 hover:underline">Duckduckgo AI</a> |
+                    <a :href="baseUrl + '/https://www.google.com/maps'" class="text-indigo-600 dark:text-indigo-400 hover:underline">Google Maps</a> |
+                     <a :href="baseUrl + '/https://earth.google.com/'" class="text-indigo-600 dark:text-indigo-400 hover:underline">Earth</a>
                 </p>
                 <p>&copy; Cloudflare Reverse <a href="https://github.com/1234567Yang/cf-proxy-ex">Acceleration</a>. </p>
             </div>
@@ -110,7 +110,8 @@
             setup() {
                 const isDarkMode = ref(localStorage.getItem('darkMode') === 'true');
                 const url = ref('');
-                const generatedUrl = ref('https://proxy.kunzite.club/');
+                const generatedUrl = ref(window.location.origin + '/');
+                const baseUrl = window.location.origin + '/';
                 const quickAccessSites = [
                     { id: 'github', name: 'GitHub', url: 'https://github.com', icon: 'fa-github', color: 'text-blue-600' },
                     { id: 'reddit', name: 'Reddit', url: 'https://www.reddit.com', icon: 'fa-reddit', color: 'text-orange-500' },
@@ -126,7 +127,6 @@
                     isDarkMode.value = !isDarkMode.value;
                     localStorage.setItem('darkMode', isDarkMode.value);
                 }
-                const generatedUrl = ref(window.location.origin + '/');
                 function generateUrl() {
                     if (url.value) {
                         generatedUrl.value = window.location.origin + '/' + url.value;
@@ -156,7 +156,8 @@
                     toggleDarkMode,
                     generateUrl,
                     copyToClipboard,
-                    setQuickAccessUrl
+                    setQuickAccessUrl,
+                    baseUrl
                 };
             }
         });
