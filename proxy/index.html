@@ -126,9 +126,10 @@
                     isDarkMode.value = !isDarkMode.value;
                     localStorage.setItem('darkMode', isDarkMode.value);
                 }
+                const generatedUrl = ref(window.location.origin + '/');
                 function generateUrl() {
                     if (url.value) {
-                        generatedUrl.value = 'https://proxy.kunzite.club/' + url.value;
+                        generatedUrl.value = window.location.origin + '/' + url.value;
                     }
                 }
                 function copyToClipboard() {
