@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GitHub 文件加速</title>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
     <script>
@@ -86,7 +86,7 @@
                        </div>
                        <div class="h-6 mt-2">
                            <p class="text-sm" :class="{'text-green-600': copyStatus === 'success','text-red-600': copyStatus === 'error','invisible': !copyStatus}">
-                               {{ copyStatus === 'success' ? '链接已复制到剪贴板' : copyStatus === 'error' ? '复制失败，请手动复制' : '&nbsp;' }}
+                               {{ copyStatus === 'success' ? '链接已复制到剪贴板' : copyStatus === 'error' ? '复制失败，请手动复制' : ' ' }}
                            </p>
                        </div>
                    </form>
@@ -120,8 +120,8 @@ wget {{ currentHost }}https://raw.githubusercontent.com/stilleshan/ServerStatus/
 curl -O {{ currentHost }}https://github.com/stilleshan/ServerStatus/archive/master.zip
 curl -O {{ currentHost }}https://raw.githubusercontent.com/stilleshan/ServerStatus/master/Dockerfile
 # 可处理形如下列的Github一键脚本
-bash <(curl -L {{ currentHost }}https://github.com/crazypeace/warp.sh/raw/main/warp.sh) 4
-bash <(wget -qO- -o- {{ currentHost }}https://git.io/v2ray.sh)
+bash &lt;(curl -L {{ currentHost }}https://github.com/crazypeace/warp.sh/raw/main/warp.sh) 4
+bash &lt;(wget -qO- -o- {{ currentHost }}https://git.io/v2ray.sh)
 wget -O tcpx.sh "{{ currentHost }}https://git.io/JYxKU" && chmod +x tcpx.sh && ./tcpx.sh
 wget -N --no-check-certificate {{ currentHost }}https://raw.githubusercontent.com/Misaka-blog/hysteria-install/main/hy2/hysteria.sh && bash hysteria.sh</code></pre>
                         </div>
@@ -129,9 +129,9 @@ wget -N --no-check-certificate {{ currentHost }}https://raw.githubusercontent.co
                             <h4 class="font-bold text-gray-700 dark:text-gray-200 mb-2 transition-colors">脚本使用</h4>
                             <pre class="bg-gray-100 dark:bg-gray-700 p-3 rounded-md overflow-x-auto transition-colors"><code class="text-gray-800 dark:text-gray-200">#需 Perl 执行环境
 #只处理一层脚本中GitHub资源
-bash <(curl -L {{ currentHost }}/https://github.com/crazypeace/warp.sh/raw/main/warp.sh | perl -pe "s#(http.*?git[^/]*?/)#{{ currentHost }}\1#g") 4
+bash &lt;(curl -L {{ currentHost }}/https://github.com/crazypeace/warp.sh/raw/main/warp.sh | perl -pe "s#(http.*?git[^/]*?/)#{{ currentHost }}\1#g") 4
 #安裝執行檔和 .dat 資料檔
-bash <(curl -L {{ currentHost }}https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh | perl -pe "s#(http.*?git[^/]*?/)#{{ currentHost }}\1#g")</code></pre>
+bash &lt;(curl -L {{ currentHost }}https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh | perl -pe "s#(http.*?git[^/]*?/)#{{ currentHost }}\1#g")</code></pre>
                         </div>
                     </div>
                 </section>
@@ -211,6 +211,12 @@ bash <(curl -L {{ currentHost }}https://raw.githubusercontent.com/v2fly/fhs-inst
         </div>
     </div>
     <script>
+        // 确保就算 Vue CDN 临时失败，也能在控制台给出明确提示，而不是死一般的白屏
+        if (typeof Vue === 'undefined') {
+            console.error('致命错误: Vue 库未能从 CDN 加载成功。请检查您的网络连接或更换更稳定的 CDN 源。');
+            document.body.innerHTML = '<div style="text-align:center; padding: 50px; font-family: sans-serif;"><h1>页面加载失败</h1><p>依赖文件未能成功获取，请检查网络或稍后刷新重试。</p></div>';
+        }
+
         const { createApp, ref, computed, onMounted, watch } = Vue
         createApp({
             setup() {
@@ -218,9 +224,15 @@ bash <(curl -L {{ currentHost }}https://raw.githubusercontent.com/v2fly/fhs-inst
                 const url = ref('')
                 const copyStatus = ref('')
                 const currentHost = computed(() => `${window.location.protocol}//${window.location.host}/`)
+                
                 const toggleDarkMode = () => {
                     isDark.value = !isDark.value
-                    localStorage.setItem('darkMode', isDark.value)
+                    // 优化：加入异常捕获，防止在无痕模式下抛错崩溃
+                    try {
+                        localStorage.setItem('darkMode', isDark.value)
+                    } catch (e) {
+                        console.warn('浏览器禁用了 localStorage，暗黑模式状态将无法保存。')
+                    }
                 }
                 const processUrl = (inputUrl) => {
                     let processedUrl = decodeURIComponent(inputUrl)
@@ -238,7 +250,7 @@ bash <(curl -L {{ currentHost }}https://raw.githubusercontent.com/v2fly/fhs-inst
                 }
                 const submitForm = () => {
                     if (url.value) {
-                        window.open(getFullUrl(), '_blank') //window.open(currentHost.value + '' + encodeURIComponent(url.value), '_blank')
+                        window.open(getFullUrl(), '_blank')
                     }
                 }
                 const copyUrl = async () => {
@@ -259,11 +271,17 @@ bash <(curl -L {{ currentHost }}https://raw.githubusercontent.com/v2fly/fhs-inst
                     copyStatus.value = ''
                 }
                 onMounted(() => {
-                    const savedDarkMode = localStorage.getItem('darkMode')
-                    if (savedDarkMode !== null) {
-                        isDark.value = savedDarkMode === 'true'
-                    } else {
+                    // 优化：加入异常捕获，防止由于隐私模式抛错导致生命周期卡死
+                    try {
+                        const savedDarkMode = localStorage.getItem('darkMode')
+                        if (savedDarkMode !== null) {
+                            isDark.value = savedDarkMode === 'true'
+                        } else {
+                            isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches
+                        }
+                    } catch (e) {
                         isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches
+                        console.warn('无法访问 localStorage，已降级为随系统默认主题。')
                     }
                 })
                 watch(isDark, (newValue) => {
